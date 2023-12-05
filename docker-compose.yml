@@ -43,6 +43,44 @@ services:
       - process-payment-db
       - collector
 
+  update-inventory-service:
+    image: update-inventory
+    build: ../Update-Inventory-Service
+    environment:
+      - BACKEND_DB_IP=update-inventory-db
+      - BACKEND_DB_USERNAME=postgres
+      - BACKEND_DB_NAME=update-inventory
+      - BACKEND_DB_PORT=5432
+      - BACKEND_DB_PASSWORD=password
+    depends_on:
+      - update-inventory-db
+      - otel-collector
+    ports:
+      - "8082:8080"
+    restart: always
+    networks:
+      - update-inventory-db
+      - collector
+
+  deliver-order-service:
+    image: deliver-order
+    build: ../Deliver-Order-Service
+    environment:
+      - BACKEND_DB_IP=deliver-order-db
+      - BACKEND_DB_USERNAME=postgres
+      - BACKEND_DB_NAME=deliver-order
+      - BACKEND_DB_PORT=5432
+      - BACKEND_DB_PASSWORD=password
+    depends_on:
+      - deliver-order-db
+      - otel-collector
+    ports:
+      - "8083:8080"
+    restart: always
+    networks:
+      - deliver-order-db
+      - collector
+
   create-order-db:
     image: postgres:latest
     environment:
@@ -64,6 +102,28 @@ services:
       - "5433:5432"
     networks:
       - process-payment-db
+
+  update-inventory-db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=update-inventory
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5434:5432"
+    networks:
+      - update-inventory-db
+
+  deliver-order-db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=deliver-order
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5435:5432"
+    networks:
+      - deliver-order-db
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.82.0
@@ -126,4 +186,6 @@ services:
 networks:
   create-order-db:
   process-payment-db:
+  update-inventory-db:
+  deliver-order-db:
   collector:
