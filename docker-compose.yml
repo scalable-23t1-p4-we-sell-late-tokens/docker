@@ -1,13 +1,13 @@
 version: "3"
 services:
   frontend:
-    image: frontend
+    image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/frontend/scalable-p4-frontend:latest
     build: ../frontend
     networks:
       - front
 
   create-order-service:
-    image: create-order
+    image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/create-order-service/scalable-p4-create-order:latest
     build: ../Create-Order-Service
     environment:
       - BACKEND_DB_IP=create-order-db
@@ -19,7 +19,7 @@ services:
       - REDIS_PORT=6379
     depends_on:
       - create-order-db
-      # - otel-collector
+      - otel-collector
       - redis
     ports:
       - "8080:8080"
@@ -32,7 +32,7 @@ services:
       - back
 
   process-payment-service:
-    image: process-payment
+    image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/process-payment-service/scalable-p4-process-payment:latest
     build: ../Process-Payment-Service
     environment:
       - BACKEND_DB_IP=process-payment-db
@@ -55,7 +55,7 @@ services:
       - redis_network
 
   update-inventory-service:
-    image: update-inventory
+    image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/update-inventory-service/scalable-p4-update-inventory:latest
     build: ../Update-Inventory-Service
     environment:
       - BACKEND_DB_IP=update-inventory-db
@@ -68,7 +68,7 @@ services:
     depends_on:
       - update-inventory-db
       - redis
-      # - otel-collector
+      - otel-collector
     ports:
       - "8082:8080"
     restart: always
@@ -78,7 +78,7 @@ services:
       - redis_network
 
   deliver-order-service:
-    image: deliver-order
+    image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/deliver-order-service/scalable-p4-deliver-order:latest
     build: ../Deliver-Order-Service
     environment:
       - BACKEND_DB_IP=deliver-order-db
@@ -186,7 +186,7 @@ services:
     image: grafana/tempo:latest
     command: ["-config.file=/etc/tempo.yml"]
     volumes:
-      - ./docker/tempo/tempo.yml:/etc/tempo.yml
+      - ./docker/Tempo/tempo.yml:/etc/tempo.yml
     ports:
       - "3200:3200"
       - "4317"
