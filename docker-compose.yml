@@ -2,13 +2,13 @@ version: "3"
 services:
   frontend:
     image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/frontend/scalable-p4-frontend:latest
-    build: ../frontend
+    # build: ../frontend
     networks:
       - front
 
   create-order-service:
     image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/create-order-service/scalable-p4-create-order:latest
-    build: ../Create-Order-Service
+    # build: ../Create-Order-Service
     environment:
       - BACKEND_DB_IP=create-order-db
       - BACKEND_DB_USERNAME=postgres
@@ -33,7 +33,7 @@ services:
 
   process-payment-service:
     image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/process-payment-service/scalable-p4-process-payment:latest
-    build: ../Process-Payment-Service
+    # build: ../Process-Payment-Service
     environment:
       - BACKEND_DB_IP=process-payment-db
       - BACKEND_DB_USERNAME=postgres
@@ -56,7 +56,7 @@ services:
 
   update-inventory-service:
     image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/update-inventory-service/scalable-p4-update-inventory:latest
-    build: ../Update-Inventory-Service
+    # build: ../Update-Inventory-Service
     environment:
       - BACKEND_DB_IP=update-inventory-db
       - BACKEND_DB_USERNAME=postgres
@@ -79,7 +79,7 @@ services:
 
   deliver-order-service:
     image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/deliver-order-service/scalable-p4-deliver-order:latest
-    build: ../Deliver-Order-Service
+    # build: ../Deliver-Order-Service
     environment:
       - BACKEND_DB_IP=deliver-order-db
       - BACKEND_DB_USERNAME=postgres
