@@ -10,15 +10,19 @@
 # Instructions:
 This repo fetch from ghcr.io images to deploy, so login to ghcr.io before doing anythin:
  - echo <ghcr.io_login_token> | docker login ghcr.io -u <your_username> --password-stdin
+
 The token can be found in the canvas submission textbox
 
 Deploying:
 To deploy, starts you minikube by:
  - minikube start
+
 Then tunnel it or port forward it, you can tunnel minikube by:
  - minikube tunnel
+
 Then change directory to k8s/ directory and do:
  - kubectl apply -f .
+
 Wait for a bit until all the components are up an running, then access the application through the ip address you've portforwarded or tunneled.
 
 (In case kubectl doesn't work):
