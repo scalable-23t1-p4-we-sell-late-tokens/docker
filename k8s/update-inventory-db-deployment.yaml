@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: update-inventory-db
+  name: update-inventory-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: update-inventory-db
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/docker-update-inventory-db: "true"
+        io.kompose.service: update-inventory-db
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: update-inventory
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:latest
+          name: update-inventory-db
+          ports:
+            - containerPort: 5432
+              hostPort: 5434
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}

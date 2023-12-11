@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: update-inventory-service
+  name: update-inventory-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: update-inventory-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/docker-collector: "true"
+        io.kompose.network/docker-redis-network: "true"
+        io.kompose.network/docker-update-inventory-db: "true"
+        io.kompose.service: update-inventory-service
+    spec:
+      containers:
+        - env:
+            - name: BACKEND_DB_IP
+              value: update-inventory-db
+            - name: BACKEND_DB_NAME
+              value: update-inventory
+            - name: BACKEND_DB_PASSWORD
+              value: password
+            - name: BACKEND_DB_PORT
+              value: "5432"
+            - name: BACKEND_DB_USERNAME
+              value: postgres
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+          image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/update-inventory-service/scalable-p4-update-inventory:latest
+          name: update-inventory-service
+          ports:
+            - containerPort: 8080
+              hostPort: 8082
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}

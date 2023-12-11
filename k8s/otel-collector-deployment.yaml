@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: otel-collector
+  name: otel-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: otel-collector
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/docker-collector: "true"
+        io.kompose.service: otel-collector
+    spec:
+      containers:
+        - args:
+            - --config=/etc/otelcol-cont/otel-collector.yml
+          image: otel/opentelemetry-collector-contrib:0.82.0
+          name: otel-collector
+          ports:
+            - containerPort: 1888
+              hostPort: 1888
+              protocol: TCP
+            - containerPort: 8888
+              hostPort: 8888
+              protocol: TCP
+            - containerPort: 8889
+              hostPort: 8889
+              protocol: TCP
+            - containerPort: 13133
+              hostPort: 13133
+              protocol: TCP
+            - containerPort: 4317
+              hostPort: 4317
+              protocol: TCP
+            - containerPort: 4318
+              hostPort: 4318
+              protocol: TCP
+            - containerPort: 55679
+              hostPort: 55679
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/otelcol-cont/otel-collector.yml
+              name: otel-collector-claim0
+      restartPolicy: Always
+      volumes:
+        - name: otel-collector-claim0
+          persistentVolumeClaim:
+            claimName: otel-collector-claim0
+status: {}

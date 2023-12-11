@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: create-order-service
+  name: create-order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: create-order-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/docker-back: "true"
+        io.kompose.network/docker-collector: "true"
+        io.kompose.network/docker-create-order-db: "true"
+        io.kompose.network/docker-front: "true"
+        io.kompose.network/docker-redis-network: "true"
+        io.kompose.service: create-order-service
+    spec:
+      containers:
+        - env:
+            - name: BACKEND_DB_IP
+              value: create-order-db
+            - name: BACKEND_DB_NAME
+              value: create-order
+            - name: BACKEND_DB_PASSWORD
+              value: password
+            - name: BACKEND_DB_PORT
+              value: "5432"
+            - name: BACKEND_DB_USERNAME
+              value: postgres
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+          image: ghcr.io/scalable-23t1-p4-we-sell-late-tokens/create-order-service/scalable-p4-create-order:latest
+          name: create-order-service
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}
